@@ -115,3 +115,7 @@ class VAE(nn.Module):
     def save_model(self, model_dir="../model", model_name="vae.pkl"):
         torch.save(self.state_dict(), os.path.join(model_dir, model_name))
         return
+
+    def load_model(self, model_dir="../model", model_name="vae.pkl"):
+        self.load_state_dict(torch.load(os.path.join(model_dir, model_name)))
+        return

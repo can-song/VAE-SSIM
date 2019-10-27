@@ -33,6 +33,7 @@ parser.add_argument("--rec_loss", type=str, default="ssim", choices=("ssim", "bc
 parser.add_argument("--size_average", action="store_true", default=False, help="")
 parser.add_argument("--resume", action="store_true", help="continue to train")
 parser.add_argument("--window_size", type=int, default=11, help="the window size of ssim")
+parser.add_argument("--ssim_method", type=str, default="lcs")
 
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
@@ -52,7 +53,7 @@ if args.cuda:
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
 if args.rec_loss == "ssim":
-    rec_loss = SSIMLoss()
+    rec_loss = SSIMLoss(method=args.ssim_method)
 elif args.rec_loss == "bce":
     rec_loss = nn.BCELoss(size_average=args.size_average)
 elif args.rec_loss == "l1":
@@ -112,22 +113,11 @@ def test(epoch):
     return test_loss
 
 
-def load_last_model():
-    models = glob('../models/*.pth')
-    model_ids = [(int(f.split('_')[1]), f) for f in models]
-    start_epoch, last_cp = max(model_ids, key=lambda item:item[0])
-    print('Last checkpoint: ', last_cp)
-    model.load_state_dict(torch.load(last_cp))
-    return start_epoch, last_cp
-
-
 def main():
     if args.resume:
-        start_epoch, _ = load_last_model()
-    else:
-        start_epoch = 0
+        model.load_model()
 
-    for epoch in range(start_epoch + 1, start_epoch + args.epochs + 1):
+    for epoch in range(1, args.epochs + 1):
         train_loss = train(epoch)
         test_loss = test(epoch)
         # torch.save(model.state_dict(), '../models/Epoch_{}_Train_loss_{:.4f}_Test_loss_{:.4f}.pth'.format(epoch, train_loss, test_loss))

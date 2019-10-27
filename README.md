@@ -1,25 +1,23 @@
-# Variational Autoencoder for face image generation in PyTorch
-Variational Autoencoder for face image generation implemented with PyTorch, Trained over a combination of CelebA + FaceScrub + JAFFE datasets.
+# Variational Autoencoder(PyTorch)
+Variational Autoencoder for face image generation implemented with PyTorch, Trained over a combination of CelebA datasets.
 
-Based on Deep Feature Consistent Variational Autoencoder (https://arxiv.org/abs/1610.00291 | https://github.com/houxianxu/DFC-VAE)
+The loss function can divided to two fold:
+KL_loss and reconstruction loss.
 
-TODO: Add DFC-VAE implementation
+1） KL_loss 用于约束隐特征的分布；
+2） 重构损失用于保证重构的图像和原始图像内容尽可能一致
 
-Pretrained model available at https://drive.google.com/open?id=0B4y-iigc5IzcTlJfYlJyaF9ndlU
+常用的重构损失是L2 loss，保证重构图像的每个像素服从高斯分布
+本仓库代码用于研究SSIM作重构损失函数时生成图像的效果
 
 ## Results
 Original Faces vs. Reconstructed Faces:
-<div>
-	<img src='imgs/Epoch_28_data.jpg', width="48%">
-  <img src='imgs/Epoch_28_recon.jpg', width="48%">
-</div>
-
-Linear interpolation between two face images:
-<div>
-	<img src='imgs/trans.jpg', width="96%">
-</div>
-
-Vector arithmatic in latent space:
-<div>
-	<img src='imgs/vec_math.jpg', width="96%">
-</div>
+### Group (1)
+![img](imgs/img1.jpg)
+![rec](imgs/rec1.jpg)
+### Group (2)
+![img](imgs/img2.jpg)
+![rec](imgs/rec2.jpg)
+### Group (3)
+![img](imgs/img3.jpg)
+![rec](imgs/rec3.jpg)
